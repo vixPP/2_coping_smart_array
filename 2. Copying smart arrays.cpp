@@ -17,6 +17,24 @@ public:
         delete[] m_data;
     }
 
+    smart_array& operator=(const smart_array& other)
+    {
+        if (this != &other)
+        {
+            delete[] m_data;
+            m_size = other.m_size;
+            m_current_size = other.m_current_size;
+            m_data = new int[m_size];
+            std::copy(other.m_data, other.m_data + other.m_current_size, m_data);
+        }
+        return *this;
+    }
+
+    smart_array(const smart_array& other) : m_size(other.m_size), m_current_size(other.m_current_size), m_data(new int[other.m_size])
+    {
+        std::copy(other.m_data, other.m_data + other.m_current_size, m_data);
+    }
+
     void add_element(int value)
     {
         if (m_current_size < m_size)
@@ -36,19 +54,6 @@ public:
             throw std::out_of_range("Index out of range");
         }
         return m_data[index];
-    }
-
-    smart_array& operator=(const smart_array& other)
-    {
-        if (this != &other)
-        {
-            delete[] m_data;
-            m_size = other.m_size;
-            m_current_size = other.m_current_size;
-            m_data = new int[m_size];
-            std::copy(other.m_data, other.m_data + m_current_size, m_data);
-        }
-        return *this;
     }
 
 private:
@@ -75,7 +80,7 @@ int main()
     catch (const std::exception& ex)
     {
         std::cout << ex.what() << std::endl;
-    } 
+    }
 
     return 0;
 }
